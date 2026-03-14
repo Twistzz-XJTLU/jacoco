@@ -4,7 +4,7 @@ jacoco:
   class-files: "C:/Users/twist/Desktop/project/target/classes"
   source-files: "C:/Users/twist/Desktop/project/src/main/java"
   agent-jar: "C:/Users/twist/Desktop/jacoco/jacocoagent.jar"
-  cli-jar: "C:/Users/twist/Desktop/jacoco/jacococli.jar"
+  cli-jar: "jacococli.jar"
   exec-file: "jacoco-demo.exec"
   report-dir: "html-report"
   address: "127.0.0.1"

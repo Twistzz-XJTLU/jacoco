@@ -25,6 +25,14 @@
     </properties>
 
     <dependencies>
+        <!-- JaCoCo agent：用于 -javaagent，版本 0.8.7 -->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>0.8.7</version>
+            <classifier>runtime</classifier>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -36,11 +44,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JaCoCo CLI，用于 dump exec 和生成 report -->
+        <!-- JaCoCo CLI，可执行 nodeps 版本，用于 dump / report，版本 0.8.7 -->
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.cli</artifactId>
-            <version>0.8.12</version>
+            <version>0.8.7</version>
+            <classifier>nodeps</classifier>
         </dependency>
     </dependencies>
 
@@ -54,7 +63,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <goals>
@@ -67,6 +76,41 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 构建时自动把 0.8.7 版本的 jacocoagent.jar / jacococli.jar 复制到项目根目录 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-jacoco-jars</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jacoco</groupId>
+                                    <artifactId>org.jacoco.agent</artifactId>
+                                    <version>0.8.7</version>
+                                    <classifier>runtime</classifier>
+                                    <destFileName>jacocoagent.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jacoco</groupId>
+                                    <artifactId>org.jacoco.cli</artifactId>
+                                    <version>0.8.7</version>
+                                    <classifier>nodeps</classifier>
+                                    <destFileName>jacococli.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.basedir}</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
