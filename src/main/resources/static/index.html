@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>JaCoCo 覆盖率控制台</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f7;
+            color: #222;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 32px auto;
+            padding: 24px 28px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1 span.badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background-color: #eef2ff;
+            color: #3730a3;
+        }
+
+        .description {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px 16px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .field small {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 7px 9px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #111827;
+            color: #f9fafb;
+            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.12s ease;
+        }
+
+        button.secondary {
+            background: #f3f4f6;
+            color: #111827;
+            box-shadow: none;
+        }
+
+        button.danger {
+            background: #b91c1c;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -4px rgba(15, 23, 42, 0.3);
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 6px 12px -4px rgba(15, 23, 42, 0.15);
+        }
+
+        button:disabled {
+            cursor: default;
+            opacity: 0.65;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status-bar {
+            margin-top: 18px;
+            font-size: 12px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-bar span.label {
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .status-bar span.value {
+            color: #111827;
+        }
+
+        .status-bar span.value.error {
+            color: #b91c1c;
+        }
+
+        .log-section {
+            margin-top: 20px;
+        }
+
+        .log-section label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        textarea {
+            margin-top: 6px;
+            width: 100%;
+            min-height: 180px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 8px 10px;
+            resize: vertical;
+            background-color: #0f172a;
+            color: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>
+        JaCoCo 覆盖率控制台
+        <span class="badge">外部 Spring Boot 项目</span>
+    </h1>
+    <p class="description">
+        在下方填写被测项目及 JaCoCo 相关路径。如果某个字段留空，将使用后端
+        <code>application.yml</code> 中的默认配置。
+    </p>
+
+    <div class="form-grid">
+        <div class="field">
+            <label for="targetJar">被测 Jar 路径 (targetJar)</label>
+            <input id="targetJar" type="text"
+                   placeholder="例如：C:/Users/twist/Desktop/project/target/demo-0.0.1.jar">
+            <small>即你要测试的 Spring Boot 项目的可执行 jar。</small>
+        </div>
+
+        <div class="field">
+            <label for="classFiles">Class 目录 (classFiles)</label>
+            <input id="classFiles" type="text"
+                   placeholder="例如：C:/Users/twist/Desktop/project/target/classes">
+            <small>被测项目编译后的 class 目录。</small>
+        </div>
+
+        <div class="field">
+            <label for="sourceFiles">源码目录 (sourceFiles)</label>
+            <input id="sourceFiles" type="text"
+                   placeholder="例如：C:/Users/twist/Desktop/project/src/main/java">
+            <small>用于在报告中显示源码。</small>
+        </div>
+
+        <div class="field">
+            <label for="agentJar">jacocoagent.jar 路径 (agentJar)</label>
+            <input id="agentJar" type="text"
+                   placeholder="例如：C:/Users/twist/Desktop/jacoco/jacocoagent.jar">
+            <small>用于挂在被测项目上的 Java Agent。</small>
+        </div>
+
+        <div class="field">
+            <label for="cliJar">jacococli.jar 路径 (cliJar)</label>
+            <input id="cliJar" type="text"
+                   placeholder="例如：C:/Users/twist/Desktop/jacoco/jacococli.jar">
+            <small>用于执行 dump / report 命令的 CLI 包。</small>
+        </div>
+
+        <div class="field">
+            <label for="execFile">Exec 目录 (可选)</label>
+            <input id="execFile" type="text" placeholder="例如：C:/Users/twist/Desktop/jacoco">
+            <small>只需要输入目录：不填则使用当前 jacoco 项目目录；填了则在该目录下自动生成默认文件名（例如 jacoco-demo.exec）。</small>
+        </div>
+
+        <div class="field">
+            <label for="reportDir">报告输出目录 (reportDir)</label>
+            <input id="reportDir" type="text" placeholder="例如：C:/Users/twist/Desktop/jacoco/html-report">
+            <small>HTML 报告输出目录，将生成 index.html。</small>
+        </div>
+
+        <div class="field">
+            <label for="address">Agent 地址 (address)</label>
+            <input id="address" type="text" placeholder="默认：127.0.0.1">
+            <small>与 JaCoCo Agent 建立 TCP 连接的地址。</small>
+        </div>
+
+        <div class="field">
+            <label for="port">Agent 端口 (port)</label>
+            <input id="port" type="number" placeholder="默认：6300">
+            <small>与 JaCoCo Agent 建立 TCP 连接的端口。</small>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button id="btnStart" type="button">① 启动被测系统</button>
+        <button id="btnDump" type="button" class="secondary">② Dump 覆盖率</button>
+        <button id="btnReport" type="button" class="secondary">③ 生成报告</button>
+        <button id="btnDumpAndReport" type="button">一键 Dump + 报告</button>
+    </div>
+
+    <div class="status-bar">
+        <span class="label">当前状态：</span>
+        <span id="statusText" class="value">就绪</span>
+    </div>
+
+    <div class="log-section">
+        <label for="logArea">调用日志</label>
+        <textarea id="logArea" readonly></textarea>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const statusText = document.getElementById("statusText");
+        const logArea = document.getElementById("logArea");
+
+        const fields = [
+            "targetJar",
+            "classFiles",
+            "sourceFiles",
+            "agentJar",
+            "cliJar",
+            "execFile",
+            "reportDir",
+            "address",
+            "port"
+        ];
+
+        function buildConfigPayload() {
+            const payload = {};
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) {
+                    return;
+                }
+                const value = el.value.trim();
+                if (value !== "") {
+                    if (id === "port") {
+                        const num = Number(value);
+                        if (!Number.isNaN(num)) {
+                            payload[id] = num;
+                        }
+                    } else {
+                        payload[id] = value;
+                    }
+                }
+            });
+            return payload;
+        }
+
+        function setStatus(message, isError) {
+            statusText.textContent = message;
+            statusText.classList.toggle("error", !!isError);
+        }
+
+        function appendLog(line) {
+            const now = new Date().toISOString();
+            logArea.value += "[" + now + "] " + line + "\n";
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        async function callApi(path) {
+            const url = "/jacoco/" + path;
+            const body = buildConfigPayload();
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: Object.keys(body).length > 0 ? JSON.stringify(body) : null
+            };
+
+            appendLog("CALL " + url + " payload=" + (options.body || "{}"));
+            setStatus("调用中：" + url + "...", false);
+
+            try {
+                const response = await fetch(url, options);
+                const text = await response.text();
+                let parsed;
+                try {
+                    parsed = JSON.parse(text);
+                } catch (e) {
+                    parsed = {raw: text};
+                }
+
+                if (!response.ok) {
+                    appendLog("ERROR " + url + " status=" + response.status + " body=" + text);
+                    setStatus("请求失败：" + (parsed.message || response.statusText), true);
+                    return {ok: false, data: parsed};
+                }
+
+                appendLog("OK " + url + " response=" + JSON.stringify(parsed));
+                setStatus(parsed.message || "成功：" + url, false);
+                return {ok: true, data: parsed};
+            } catch (e) {
+                appendLog("EXCEPTION " + url + " error=" + e.message);
+                setStatus("调用异常：" + e.message, true);
+                return {ok: false, data: null};
+            }
+        }
+
+        document.getElementById("btnStart").addEventListener("click", function () {
+            callApi("start");
+        });
+
+        document.getElementById("btnDump").addEventListener("click", function () {
+            callApi("dump");
+        });
+
+        document.getElementById("btnReport").addEventListener("click", function () {
+            callApi("report");
+        });
+
+        document.getElementById("btnDumpAndReport").addEventListener("click", async function () {
+            const dumpResult = await callApi("dump");
+            if (!dumpResult.ok) {
+                return;
+            }
+            await callApi("report");
+        });
+    })();
+</script>
+</body>
+</html>
+

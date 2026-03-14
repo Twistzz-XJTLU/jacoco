@@ -1,0 +1,44 @@
+# Maven / Gradle
+target/
+.mvn/
+build/
+out/
+
+# IDE / Editor
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.factorypath
+.vs/
+.vscode/
+
+# OS / Tools
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Test / Coverage
+*.exec
+html-report/
+surefire-reports/
+failsafe-reports/
+
+# Node / Frontend (if any)
+node_modules/
+dist/
+
+# Cursor / Editor-specific
+.cursor/
+.idea_modules/
+

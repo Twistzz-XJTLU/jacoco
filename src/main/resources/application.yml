@@ -1,0 +1,15 @@
+jacoco:
+  # TODO: 根据自己被测项目实际路径修改下面配置
+  target-jar: "C:/Users/twist/Desktop/project/target/demo-0.0.1-SNAPSHOT.jar"
+  class-files: "C:/Users/twist/Desktop/project/target/classes"
+  source-files: "C:/Users/twist/Desktop/project/src/main/java"
+  agent-jar: "C:/Users/twist/Desktop/jacoco/jacocoagent.jar"
+  cli-jar: "C:/Users/twist/Desktop/jacoco/jacococli.jar"
+  exec-file: "jacoco-demo.exec"
+  report-dir: "html-report"
+  address: "127.0.0.1"
+  port: 6300
+
+server:
+  port: 8081
+
