@@ -68,7 +68,7 @@ mvn spring-boot:run
 
 - `C:/Users/twist/Desktop/jacoco/html-report/index.html`
 
-用浏览器打开即可查看测试覆盖率。11
+用浏览器打开即可查看测试覆盖率。
 
 #### 4. 使用前端可视化控制台
 
